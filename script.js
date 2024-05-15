@@ -1,129 +1,98 @@
-// recuperation id de l element table
+let tables = [
+    { livre: 'Romance', auteur: 'ZAC', annepublication: '07/08/2022' },
+    { livre: 'Bienfait', auteur: 'Rachid', annepublication: '07/23/2021' },
+    { livre: 'Passion', auteur: 'ZAC', annepublication: '07/23/2021' }
+];
 
-var rIndex,
-table = document.querySelector(".table");
+const table = document.querySelector('.table');
+const tblbody = document.createElement('tbody');
 
+// Fonction pour créer le tableau
+function createTable() {
+    for (let index = 0; index < tables.length; index++) {
+        let row = document.createElement('tr');
+        
+        // Créer les cellules pour les propriétés de l'objet
+        Object.values(tables[index]).forEach(value => {
+            const cell = document.createElement('td');
+            const cellText = document.createTextNode(value);
+            cell.appendChild(cellText);
+            row.appendChild(cell);
+        });
 
-// verification des entrees
-function checkEmptyInput()
-{
-var isEmpty = false,
-    livre = document.getElementById("livre").value,
-    auteur = document.getElementById("auteur").value,
-    anneePub = document.getElementById("anneePub").value;
+        // Créer la cellule et le bouton "SUPPRIMER"
+        let buttonCell = document.createElement("td");
+        let deleteButton = document.createElement("button");
+        let buttonText = document.createTextNode("SUPPRIMER");
+        deleteButton.setAttribute("class", "delete-sup");
+        deleteButton.appendChild(buttonText);
+        buttonCell.appendChild(deleteButton);
+        row.appendChild(buttonCell);
 
-if(livre === ""){
-    alert("livre Name Connot Be Empty");
-    isEmpty = true;
-}
-else if(auteur === ""){
-    alert("auteur Name Connot Be Empty");
-    isEmpty = true;
-}
-else if(anneePub === ""){
-    alert("anneePub Connot Be Empty");
-    isEmpty = true;
-}
-return isEmpty;
-}
-// Modal
-let modal=document.getElementById("modals")
-let modalbutton=document.getElementById("addLivreModalButton")
-let close=document.querySelector(".close")
+        // Ajouter un attribut ID pour la ligne
+        row.setAttribute("id", "row-" + index);
 
-modalbutton.onclick=function(){
-    modal.style.display="block";
-}
+        // Ajouter l'événement de suppression au bouton
+        deleteButton.addEventListener('click', function() {
+            tblbody.removeChild(row);  // Supprimer la ligne du tbody
+        });
 
-close.onclick=function(){
-    modal.style.display="none";
-}
-
-
-// ajout d une ligne dans le tableau
-function addHtmlTableRow()
-{
-//event.preventDefault();
-if(!checkEmptyInput()){
-var newRow = table.insertRow(table.length),
-    cell1 = newRow.insertCell(0),
-    cell2 = newRow.insertCell(1),
-    cell3 = newRow.insertCell(2),
-    cell4 = newRow.insertCell(3),
-   
-    livre = document.getElementById("livre").value,
-    auteur = document.getElementById("auteur").value,
-    anneePub = document.getElementById("anneePub").value;
-    sup = document.getElementById("sup").value;
-
-cell1.innerHTML = livre;
-cell2.innerHTML = auteur;
-cell3.innerHTML = anneePub;
-cell4.innerHTML = sup;
-
-
-
-
-localStorage.setItem("livre", document.getElementById("livre").value);
-localStorage.setItem("auteur", document.getElementById("auteur").value);
-localStorage.setItem("anneePub",document.getElementById("anneePub").value );
-
-
-}
-}
-
-// Incrementation du tableau , recuperation du l index
-
-function selectedRowToInput() {
-    console.log("selectedRowToInput called");
-    for (var i = 1; i < table.rows.length; i++) {
-        table.rows[i].onclick = function() {
-            console.log("Row clicked");
-            rIndex = this.rowIndex;
-            console.log("Row index:", rIndex);
-            document.getElementById("livre").value = this.cells[0].innerHTML;
-            document.getElementById("auteur").value = this.cells[1].innerHTML;
-            document.getElementById("anneePub").value = this.cells[2].innerHTML;
-            document.getElementById("sup").value = this.cells[3].innerHTML;
-        };
+        tblbody.appendChild(row);  // Ajouter la ligne au tbody
     }
-}
-selectedRowToInput();
 
-
-// la fonction marquerlu ici
-
-function marquerluHtmlTbleSelectedRow(){
-    console.log("lu");
-    table = document.querySelector(".table");
-
-
-    livre = document.getElementById("livre").value,
-    auteur = document.getElementById("auteur").value,
-    anneePub = document.getElementById("anneePub").value;
-
-   // document.getElementById("livre").style.textDecoration="line-through";
- //document.getElementById("auteur").style.textDecoration="line-through";
-   //document.getElementById("anneePub").style.textDecoration="line-through";
-
-
-}
-//marquerluHtmlTbleSelectedRow();
-
-
-function removeSelectedRow()
-{
-table.deleteRow(rIndex);
-// supprimer un input
-document.getElementById("livre").value = "";
-document.getElementById("auteur").value = "";
-document.getElementById("anneePub").value = "";
-
-localStorage.setItem("livre", document.getElementById("livre").value);
-localStorage.setItem("auteur", document.getElementById("auteur").value);
-localStorage.setItem("anneePub",document.getElementById("anneePub").value );
-
+    table.appendChild(tblbody);  // Ajouter le tbody au tableau
+    document.body.appendChild(table);  // Ajouter le tableau au body du document
 }
 
+createTable();  // Appeler la fonction pour créer le tableau
+
+// Gestion de la modalité
+let modal = document.getElementById("modals");
+let modalbutton = document.getElementById("addLivreModalButton");
+let close = document.querySelector(".close");
+
+modalbutton.onclick = function() {
+    modal.style.display = "block";
+}
+
+close.onclick = function() {
+    modal.style.display = "none";
+}
+
+// Ajouter un livre
+
+let addAjouterButton = document.querySelector(".addAjouterButton");
+addAjouterButton.onclick=function(event){
+    event.preventDefault();
+    const livre = document.getElementById("livre").value
+    const auteur = document.getElementById("auteur").value
+    const anneepub = document.getElementById("anneepub").value
+   
+
+   const  newtables = {livre , auteur,anneepub};
+    tables.push(newtables);
+    console.log("clic");
+    let row = document.createElement('tr');
+    let cell0 = row.insertCell(0);
+    const cell0Text = document.createTextNode(livre);
+    cell0.appendChild(cell0Text);
+    row.appendChild(cell0);
+
+    let cell1 = row.insertCell(1);
+    const cell1Text = document.createTextNode(auteur);
+    cell0.appendChild(cell1Text);
+    row.appendChild(cell1);
+
+    let cell2 = row.insertCell(2);
+    const cell2Text = document.createTextNode(anneepub);
+    cell0.appendChild(cell2Text);
+    row.appendChild(cell2);
 
 
+
+    //row.appendChild(buttonCell);
+    table.appendChild(tblbody);  // Ajouter le tbody au tableau
+    tblbody.removeChild(row);
+    document.body.appendChild(table);  // Ajouter le tableau au body du document
+
+}
